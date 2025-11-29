@@ -4,7 +4,7 @@ La app 'finanzas' es para manejar ingresos, gastos, productos, comisiones y repo
 
 La app 'usuarios' es para manejar la autenticación y perfiles de usuarios, incluyendo el manejo de los barberos y clientes.
 
-PASOS PARA CREAR LA BASE DE DATOS Y PARA CORRER EL PROGRAMA CORRECTAMENTE
+PASOS PARA CREAR LA BASE DE DATOS Y PARA CONFIGURAR EL PROGRAMA CORRECTAMENTE
 
 1. Crear el entorno virtual en el directorio raiz.
     python -m venv .venv
