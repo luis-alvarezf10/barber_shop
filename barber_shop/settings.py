@@ -40,13 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     #apps
-    'agenda',
-    'finanzas',
-    'usuarios',
+    'Schedule',
+    'Finance',
+    'Users',
 ]
 
 #Crear un modelo de usuario personalizado basado en nuestro modelo Usuario
-AUTH_USER_MODEL = 'usuarios.Usuario'
+AUTH_USER_MODEL = 'Users.Users'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

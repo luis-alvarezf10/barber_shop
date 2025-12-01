@@ -12,7 +12,7 @@ class Product(models.Model):
     selling_price = models.FloatField(default=0.0, verbose_name="Precio de Venta al Cliente")
 
     def __str__(self):
-        return self.nombre_producto
+        return self.product_name
 
 class Outflow(models.Model):
 
@@ -30,7 +30,7 @@ class Outflow(models.Model):
     next_payment_date = models.DateField(null=True, blank=True)
     
     def __str__(self):
-        return f"{self.razon} - ${self.costo}"
+        return f"{self.reazon} - ${self.price}"
 
 
 # FACTURACION 
@@ -52,14 +52,14 @@ class Bill(models.Model):
     paiment_method = models.CharField(max_length=50, default='Efectivo')
     
     def __str__(self):
-        return f"Factura #{self.id_factura.hex[:8]} - Total: ${self.monto_total}"
+        return f"Factura #{self.bill_id.hex[:8]} - Total: ${self.total_amount}"
 
 class BillServices(models.Model):
     bill = models.ForeignKey(Bill, on_delete=models.CASCADE)
     service = models.ForeignKey(Services, on_delete=models.SET_NULL, null=True)
     
     # Barbero que realizó el servicio
-    barbero = models.ForeignKey(
+    barber = models.ForeignKey(
         Users, 
         on_delete=models.SET_NULL, 
         null=True, 
@@ -76,7 +76,7 @@ class BillServices(models.Model):
     class Meta:
         verbose_name = 'Servicio Facturado'
         verbose_name_plural = 'Servicios Facturados'
-        unique_together = ('factura', 'servicio', 'barbero') # Un barbero solo puede hacer mas de un servicio en una factura, pero se almacena por separado
+        unique_together = ('bill', 'service', 'barber') # Un barbero solo puede hacer mas de un servicio en una factura, pero se almacena por separado
 
 class BillProduct(models.Model):
     bill = models.ForeignKey(Bill, on_delete=models.CASCADE)
@@ -88,4 +88,4 @@ class BillProduct(models.Model):
     class Meta:
         verbose_name = 'Producto Facturado'
         verbose_name_plural = 'Productos Facturados'
-        unique_together = ('factura', 'producto')
+        unique_together = ('bill', 'product')

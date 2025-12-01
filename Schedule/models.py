@@ -13,7 +13,7 @@ class Services(models.Model):
         verbose_name_plural = 'Servicios'
         
     def __str__(self):
-        return self.nombre_servicio
+        return self.service_name
 
 class BarberServices(models.Model):
 
@@ -29,7 +29,7 @@ class BarberServices(models.Model):
     class Meta:
         verbose_name = 'Habilidad del Barbero'
         verbose_name_plural = 'Habilidades de Barberos'
-        unique_together = ('barbero', 'servicio') # Un barbero solo puede tener un servicio registrado a la vez
+        unique_together = ('barber', 'service') # Un barbero solo puede tener un servicio registrado a la vez
         
     def __str__(self):
         return f"{self.barbero.username} puede hacer {self.servicio.nombre_servicio}"
@@ -63,7 +63,7 @@ class Appointment(models.Model):
     class Meta:
         verbose_name = 'Cita'
         verbose_name_plural = 'Citas'
-        ordering = ['fecha_hora']
+        ordering = ['time_hour']
         
     def __str__(self):
-        return f"Cita de {self.cliente.nombre} con {self.barbero.username if self.barbero else 'No Asignado'} @ {self.fecha_hora.strftime('%Y-%m-%d %H:%M')}"
+        return f"Cita de {self.client.name} con {self.barber.username if self.barber else 'No Asignado'} @ {self.time_hour.strftime('%Y-%m-%d %H:%M')}"
