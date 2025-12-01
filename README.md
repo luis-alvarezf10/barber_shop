@@ -24,6 +24,7 @@
   <li>Revisar y respetar el diseño de UI por nivel de acceso en Figma. </li>
   <li>Mantener comunicación asertiva y clara sobre la funcionalidad que se está desarrollando — preferiblemente por WhatsApp para coordinación rápida. </li>
   <li>Recomiendo consultar <a href="https://flowbite.com">Flowbite</a> para entender el contexto de funcionamiento de <strong>Tailwind CSS</strong> y componentes reutilizables.</li>
+  <li>Recomiendo escribir variables y carpetas en snake case o lowercase y estrictamente en inglés.</li>
 </ul>
 
 <hr/>
@@ -41,6 +42,7 @@
 
 <h2>Futuras implementaciones (ideas / roadmap)</h2>
 <ul>
+  <li>Despliegue en vercel.</li>
   <li>Generación de reportes en PDF.</li>
   <li>Validación de suscripción: consultar Supabase para verificar si la barbería está solvente.</li>
   <li>Consulta de tasa del dólar (Banco Central de Venezuela) vía API o web-scraping.</li>
