@@ -18,12 +18,12 @@
 <h2>Recomendaciones para el equipo</h2>
 <ul>
   <li>No utilizar IA como atajo: <strong>entender primero los conceptos</strong> antes de delegar en automatizaciones. (IA: útil, pero no reemplaza comprensión.)</li>
-  <li>No tocar la rama <code>main</code>. Trabajar en ramas feature/issue y abrir pull requests. </li>
-  <li>Dividir funcionalidades y tareas a través de Trello (o tablero equivalente). </li>
+  <li>No tocar la rama <code>main</code>. Trabajar en ramas feature/ o abrir pull requests. </li>
+  <li>Dividir funcionalidades y tareas a través de Trello. </li>
   <li>Consultar los diagramas (casos de uso, modelo entidad-relación) en Lucidchart para entender flujo y datos. </li>
-  <li>Revisar y respetar el diseño de UI por nivel de acceso en Figma — el look & feel importa. </li>
+  <li>Revisar y respetar el diseño de UI por nivel de acceso en Figma. </li>
   <li>Mantener comunicación asertiva y clara sobre la funcionalidad que se está desarrollando — preferiblemente por WhatsApp para coordinación rápida. </li>
-  <li>Recomiendo consultar <strong>Flowbite</strong> para entender el contexto de funcionamiento de <strong>Tailwind CSS</strong> y componentes reutilizables.</li>
+  <li>Recomiendo consultar <a href="https://flowbite.com">Flowbite</a> para entender el contexto de funcionamiento de <strong>Tailwind CSS</strong> y componentes reutilizables.</li>
 </ul>
 
 <hr/>
@@ -44,15 +44,13 @@
   <li>Generación de reportes en PDF.</li>
   <li>Validación de suscripción: consultar Supabase para verificar si la barbería está solvente.</li>
   <li>Consulta de tasa del dólar (Banco Central de Venezuela) vía API o web-scraping.</li>
-  <li>Migración/soporte para otra base de datos (PostgreSQL / MySQL) para ambientes productivos.</li>
+  <li>Migración/soporte para otra base de datos para ambientes productivos.</li>
   <li>Separar backend y frontend: implementación de SPA con React para la UI.</li>
 </ul>
 
 <hr/>
 
 <h2>Instalación (desarrollo local)</h2>
-
-<p>Estos pasos asumen que tienes <code>git</code>, <code>python 3.10+</code>, <code>node/npm</code> instalados en tu máquina.</p>
 
 <ol>
   <li><strong>Clona el repositorio</strong>
@@ -70,15 +68,7 @@ source .venv/bin/activate
 
   <li><strong>Instalar dependencias Python</strong>
     <pre><code>pip install -r requirements.txt</code></pre>
-    <small>Si no existe <code>requirements.txt</code>, instalar al menos Django: <code>pip install django python-dotenv</code></small>
-  </li>
-
-  <li><strong>Variables de entorno</strong>  
-    Crear archivo <code>.env</code> en la raíz (no subir al repo) con variables mínimas:
-    <pre><code>SECRET_KEY=tu_secret_key_aqui
-DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1
-DATABASE_URL=sqlite:///db.sqlite3</code></pre>
+    <small>Si no existe <code>requirements.txt</code>, instalar al menos Django: <code>pip install django </code></small>
   </li>
 
   <li><strong>Migraciones y base de datos</strong>
@@ -86,31 +76,11 @@ DATABASE_URL=sqlite:///db.sqlite3</code></pre>
 python manage.py createsuperuser  # crear admin para pruebas</code></pre>
   </li>
 
-  <li><strong>Instalar dependencias frontend (Tailwind)</strong>  
-    Si el proyecto usa Tailwind con npm:
-    <pre><code>npm install
-# generar estilos (modo desarrollo)
-npm run dev
-# o, si se usa Tailwind CLI:
-npx tailwindcss -i ./src/input.css -o ./static/css/output.css --watch</code></pre>
-    <small>Ajustar scripts según el package.json presente.</small>
-  </li>
-
-  <li><strong>Recolección de archivos estáticos (opcional)</strong>
-    <pre><code>python manage.py collectstatic</code></pre>
-  </li>
-
   <li><strong>Levantar servidor de desarrollo</strong>
     <pre><code>python manage.py runserver</code></pre>
     <p>Abrir <code>http://127.0.0.1:8000</code> en el navegador.</p>
   </li>
 </ol>
-
-<p><strong>Notas:</strong></p>
-<ul>
-  <li>Para producción usar <code>DEBUG=False</code>, configurar <code>ALLOWED_HOSTS</code> y usar una base de datos como PostgreSQL.</li>
-  <li>Si se separa frontend (React/Vite) habrá pasos adicionales de build y despliegue.</li>
-</ul>
 
 <hr/>
 
@@ -123,7 +93,7 @@ npx tailwindcss -i ./src/input.css -o ./static/css/output.css --watch</code></pr
 
 <hr/>
 
-<h2>Participantes (representación Nex Technology)</h2>
+<h2>Participantes (en representación de Nex Technology)</h2>
 <ul>
   <li>Luis Alvarez</li>
   <li>Daniel Mata</li>
@@ -133,17 +103,14 @@ npx tailwindcss -i ./src/input.css -o ./static/css/output.css --watch</code></pr
 <hr/>
 
 <h2>Licencia</h2>
-<p>Por defecto sugerimos MIT. Si la empresa necesita otra, reemplazar.</p>
+<p>Por defecto MIT.</p>
 
 <hr/>
 
-<h2>Contacto / Comunicación</h2>
-<p>Para coordinación diaria: WhatsApp del equipo. Para aspectos técnicos: abrir issue en este repo y linkear el tablero de Trello correspondiente.</p>
 
-<hr/>
 
 <footer>
-  <p><small>Última modificación: 01/12/2025 • Creado por Nex Technology</small></p>
+  <p><small>Última modificación: 01/12/2025</small></p>
 </footer>
 
 
