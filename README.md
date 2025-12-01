@@ -56,8 +56,8 @@
 
 <ol>
   <li><strong>Clona el repositorio</strong>
-    <pre><code>git clone &lt;url-del-repositorio&gt;
-cd &lt;nombre-del-proyecto&gt;</code></pre>
+    <pre><code>git clone https://github.com/luis-alvarezf10/barber_shop
+cd barber_shop</code></pre>
   </li>
 
   <li><strong>Crear entorno virtual y activar</strong>
