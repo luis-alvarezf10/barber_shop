@@ -1,12 +1,12 @@
 from django.db import models
-from usuarios.models import Usuario, Cliente
+from Users.models import Users, Client
 import uuid
 
-class Servicio(models.Model):
+class Services(models.Model):
 
-    id_servicio = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    nombre_servicio = models.CharField(max_length=100, unique=True)
-    costo = models.FloatField(default=0.0)
+    service_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    service_name = models.CharField(max_length=100, unique=True)
+    price = models.FloatField(default=0.0)
     
     class Meta:
         verbose_name = 'Servicio'
@@ -15,16 +15,16 @@ class Servicio(models.Model):
     def __str__(self):
         return self.nombre_servicio
 
-class BarberoServicio(models.Model):
+class BarberServices(models.Model):
 
     # Filtramos para asegurar que solo se relacionen con usuarios con rol 'barber'
-    barbero = models.ForeignKey(
-        Usuario, 
+    barber = models.ForeignKey(
+        Users, 
         on_delete=models.CASCADE, 
         limit_choices_to={'rol': 'barber'}, 
         verbose_name="Barbero"
     )
-    servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, verbose_name="Servicio")
+    service = models.ForeignKey(Services, on_delete=models.CASCADE, verbose_name="Servicio")
     
     class Meta:
         verbose_name = 'Habilidad del Barbero'
@@ -34,7 +34,7 @@ class BarberoServicio(models.Model):
     def __str__(self):
         return f"{self.barbero.username} puede hacer {self.servicio.nombre_servicio}"
 
-class Cita(models.Model):
+class Appointment(models.Model):
     """
     Modelo para registrar las citas agendadas por la recepcionista.
     """
@@ -45,20 +45,20 @@ class Cita(models.Model):
         ('cancelada', 'Cancelada'),
     )
     
-    id_cita = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    appointment_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
     
     # El barbero asignado para esta cita
-    barbero = models.ForeignKey(
-        Usuario, 
+    barber = models.ForeignKey(
+        Users, 
         on_delete=models.SET_NULL, # Si el barbero se va, la cita no se borra
         null=True, 
         limit_choices_to={'rol': 'barber'}
     )
     
-    fecha_hora = models.DateTimeField()
-    duracion_minutos = models.IntegerField(default=30)
-    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
+    time_hour = models.DateTimeField()
+    duration_minutes = models.IntegerField(default=30)
+    status = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
     
     class Meta:
         verbose_name = 'Cita'

@@ -9,7 +9,7 @@ ROLES_CHOICES = (
     ('receptionist', 'Recepcionista'),
 )
 
-class Usuario(AbstractUser):
+class Users(AbstractUser):
     """
     Modelo de Usuario personalizado que incluye el campo 'rol'.
     Este modelo reemplaza el modelo User por defecto de Django.
@@ -18,7 +18,7 @@ class Usuario(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     
     
-    rol = models.CharField(
+    role = models.CharField(
         max_length=20,
         choices=ROLES_CHOICES,
         default='barber', # Rol por defecto
@@ -26,8 +26,8 @@ class Usuario(AbstractUser):
     )
     
     # Campos adicionales para la información personal
-    cedula = models.CharField(max_length=20, unique=True, null=True, blank=True)
-    numero = models.CharField(max_length=15, null=True, blank=True)
+    IDcedula = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    phonenumber = models.CharField(max_length=15, null=True, blank=True)
     
     class Meta:
         verbose_name = 'Usuario'
@@ -55,14 +55,14 @@ class Usuario(AbstractUser):
         related_query_name="usuario",
     )
 
-class Cliente(models.Model):
+class Client(models.Model):
 
-    id_cliente = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    nombre = models.CharField(max_length=100)
-    apellido = models.CharField(max_length=100)
-    cedula = models.CharField(max_length=20, unique=True, null=True, blank=True)
-    ubicacion = models.CharField(max_length=255, null=True, blank=True)
-    numero = models.CharField(max_length=15)
+    id_client = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100)
+    lastname = models.CharField(max_length=100)
+    IDcedula = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    location = models.CharField(max_length=255, null=True, blank=True)
+    phonenumber = models.CharField(max_length=15)
     
     class Meta:
         verbose_name = 'Cliente'

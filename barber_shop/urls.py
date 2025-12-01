@@ -5,9 +5,9 @@ urlpatterns = [
     # Acceso al sitio de administración de Django
     path('admin/', admin.site.urls), 
 
-    path('auth/', include('usuarios.urls')), 
+    path('auth/', include('Users.urls')), 
 
-    path('agenda/', include('agenda.urls')), 
+    path('agenda/', include('Schedule.urls')), 
 
-    path('finanzas/', include('finanzas.urls')), 
+    path('finanzas/', include('Finance.urls')), 
 ]
