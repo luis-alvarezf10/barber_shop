@@ -1,5 +1,5 @@
 from django.db import models
-from Users.models import Users, Client
+from users.models import User, Client
 import uuid
 
 class Services(models.Model):
@@ -19,7 +19,7 @@ class BarberServices(models.Model):
 
     # Filtramos para asegurar que solo se relacionen con usuarios con rol 'barber'
     barber = models.ForeignKey(
-        Users, 
+        User, 
         on_delete=models.CASCADE, 
         limit_choices_to={'rol': 'barber'}, 
         verbose_name="Barbero"
@@ -50,7 +50,7 @@ class Appointment(models.Model):
     
     # El barbero asignado para esta cita
     barber = models.ForeignKey(
-        Users, 
+        User, 
         on_delete=models.SET_NULL, # Si el barbero se va, la cita no se borra
         null=True, 
         limit_choices_to={'rol': 'barber'}

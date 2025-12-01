@@ -1,6 +1,6 @@
 from django.db import models
-from Users.models import Client, Users
-from Schedule.models import Services
+from users.models import Client, User
+from schedule.models import Services
 import uuid
 
 # PRODUCTOS Y EGRESOS
@@ -41,7 +41,7 @@ class Bill(models.Model):
     
     # La recepcionista que procesó la venta
     recepcionist = models.ForeignKey(
-        Users, 
+        User, 
         on_delete=models.SET_NULL, 
         null=True, 
         limit_choices_to={'rol': 'receptionist'}
@@ -59,8 +59,8 @@ class BillServices(models.Model):
     service = models.ForeignKey(Services, on_delete=models.SET_NULL, null=True)
     
     # Barbero que realizó el servicio
-    barber = models.ForeignKey(
-        Users, 
+    barbero = models.ForeignKey(
+        User, 
         on_delete=models.SET_NULL, 
         null=True, 
         limit_choices_to={'rol': 'barber'}
@@ -76,7 +76,7 @@ class BillServices(models.Model):
     class Meta:
         verbose_name = 'Servicio Facturado'
         verbose_name_plural = 'Servicios Facturados'
-        unique_together = ('bill', 'service', 'barber') # Un barbero solo puede hacer mas de un servicio en una factura, pero se almacena por separado
+        unique_together = ('bill', 'service', 'barbero') # Un barbero solo puede hacer mas de un servicio en una factura, pero se almacena por separado
 
 class BillProduct(models.Model):
     bill = models.ForeignKey(Bill, on_delete=models.CASCADE)
