@@ -1,25 +1,149 @@
-La app 'agenda' es para manejar citas, horarios y la relacion entre Barberos y servicios.
+<!-- README.md generado por Nex Technology -->
+<!-- Última modificación: 01/12/2025 -->
 
-La app 'finanzas' es para manejar ingresos, gastos, productos, comisiones y reportes financieros del negocio.
+<h1 align="center">Sistema de Barbería</h1>
+<p align="center"><em>(sistema de prueba para futura implementación)</em></p>
 
-La app 'usuarios' es para manejar la autenticación y perfiles de usuarios, incluyendo el manejo de los barberos y clientes.
+<p>
+<strong>Descripción:</strong> Sistema de gestión para barbería con 3 niveles de acceso: <strong>barbero</strong>, <strong>administrador</strong> y <strong>recepcionista</strong>. Cada rol tiene funcionalidades diferenciadas (turnos/agenda, ventas, inventario, reportes básicos, administración de usuarios, etc.).  
+</p>
 
-PASOS PARA CREAR LA BASE DE DATOS Y PARA CONFIGURAR EL PROGRAMA CORRECTAMENTE
+<hr/>
 
-1. Crear el entorno virtual en el directorio raiz.
-    python -m venv .venv
+<h2>Objetivo</h2>
+<p>Proveer una base funcional y clara para una futura implementación productiva. Este repositorio contiene la estructura backend en <strong>Django</strong> y plantillas frontend basadas en <strong>HTML / Tailwind CSS</strong>, pensado para iterar sobre diseño y lógica por equipos.</p>
 
-2. Hacer el git clone
-    git clone <repo_url>
+<hr/>
 
-3. Instalar las dependencias
-    pip install -r requirements.txt
+<h2>Recomendaciones para el equipo</h2>
+<ul>
+  <li>No utilizar IA como atajo: <strong>entender primero los conceptos</strong> antes de delegar en automatizaciones. (IA: útil, pero no reemplaza comprensión.)</li>
+  <li>No tocar la rama <code>main</code>. Trabajar en ramas feature/issue y abrir pull requests. </li>
+  <li>Dividir funcionalidades y tareas a través de Trello (o tablero equivalente). </li>
+  <li>Consultar los diagramas (casos de uso, modelo entidad-relación) en Lucidchart para entender flujo y datos. </li>
+  <li>Revisar y respetar el diseño de UI por nivel de acceso en Figma — el look & feel importa. </li>
+  <li>Mantener comunicación asertiva y clara sobre la funcionalidad que se está desarrollando — preferiblemente por WhatsApp para coordinación rápida. </li>
+  <li>Recomiendo consultar <strong>Flowbite</strong> para entender el contexto de funcionamiento de <strong>Tailwind CSS</strong> y componentes reutilizables.</li>
+</ul>
 
-4. Hacer la migración y aplicarla.
-    python manage.py makemigrations
-    python manage.py migrate
+<hr/>
 
-5. Crear un super usuario
-    python manage.py createsuperuser
+<h2>Tecnologías utilizadas</h2>
+<ul>
+  <li><strong>Backend / Autenticación:</strong> Django</li>
+  <li><strong>Frontend:</strong> HTML, CSS y Tailwind CSS</li>
+  <li><strong>Íconos:</strong> FontAwesome</li>
+  <li><strong>Fuente:</strong> Poppins (importada desde Google Fonts)</li>
+  <li><strong>Base de datos:</strong> SQLite3 (configuración por defecto para desarrollo)</li>
+</ul>
 
-LISTO NO LA CAGUEN  
+<hr/>
+
+<h2>Futuras implementaciones (ideas / roadmap)</h2>
+<ul>
+  <li>Generación de reportes en PDF.</li>
+  <li>Validación de suscripción: consultar Supabase para verificar si la barbería está solvente.</li>
+  <li>Consulta de tasa del dólar (Banco Central de Venezuela) vía API o web-scraping.</li>
+  <li>Migración/soporte para otra base de datos (PostgreSQL / MySQL) para ambientes productivos.</li>
+  <li>Separar backend y frontend: implementación de SPA con React para la UI.</li>
+</ul>
+
+<hr/>
+
+<h2>Instalación (desarrollo local)</h2>
+
+<p>Estos pasos asumen que tienes <code>git</code>, <code>python 3.10+</code>, <code>node/npm</code> instalados en tu máquina.</p>
+
+<ol>
+  <li><strong>Clona el repositorio</strong>
+    <pre><code>git clone &lt;url-del-repositorio&gt;
+cd &lt;nombre-del-proyecto&gt;</code></pre>
+  </li>
+
+  <li><strong>Crear entorno virtual y activar</strong>
+    <pre><code>python -m venv .venv
+# Linux / macOS
+source .venv/bin/activate
+# Windows (PowerShell)
+.venv\Scripts\Activate.ps1</code></pre>
+  </li>
+
+  <li><strong>Instalar dependencias Python</strong>
+    <pre><code>pip install -r requirements.txt</code></pre>
+    <small>Si no existe <code>requirements.txt</code>, instalar al menos Django: <code>pip install django python-dotenv</code></small>
+  </li>
+
+  <li><strong>Variables de entorno</strong>  
+    Crear archivo <code>.env</code> en la raíz (no subir al repo) con variables mínimas:
+    <pre><code>SECRET_KEY=tu_secret_key_aqui
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+DATABASE_URL=sqlite:///db.sqlite3</code></pre>
+  </li>
+
+  <li><strong>Migraciones y base de datos</strong>
+    <pre><code>python manage.py migrate
+python manage.py createsuperuser  # crear admin para pruebas</code></pre>
+  </li>
+
+  <li><strong>Instalar dependencias frontend (Tailwind)</strong>  
+    Si el proyecto usa Tailwind con npm:
+    <pre><code>npm install
+# generar estilos (modo desarrollo)
+npm run dev
+# o, si se usa Tailwind CLI:
+npx tailwindcss -i ./src/input.css -o ./static/css/output.css --watch</code></pre>
+    <small>Ajustar scripts según el package.json presente.</small>
+  </li>
+
+  <li><strong>Recolección de archivos estáticos (opcional)</strong>
+    <pre><code>python manage.py collectstatic</code></pre>
+  </li>
+
+  <li><strong>Levantar servidor de desarrollo</strong>
+    <pre><code>python manage.py runserver</code></pre>
+    <p>Abrir <code>http://127.0.0.1:8000</code> en el navegador.</p>
+  </li>
+</ol>
+
+<p><strong>Notas:</strong></p>
+<ul>
+  <li>Para producción usar <code>DEBUG=False</code>, configurar <code>ALLOWED_HOSTS</code> y usar una base de datos como PostgreSQL.</li>
+  <li>Si se separa frontend (React/Vite) habrá pasos adicionales de build y despliegue.</li>
+</ul>
+
+<hr/>
+
+<h2>Convenciones de Git</h2>
+<ul>
+  <li>No pushear directamente a <code>main</code>.</li>
+  <li>Ramas: <code>feature/<nombre-funcionalidad></code>, <code>fix/<ticket></code>, <code>hotfix/*</code>.</li>
+  <li>Cada PR debe tener descripción de la funcionalidad, screenshots (si aplica) y referencia al ítem en Trello.</li>
+</ul>
+
+<hr/>
+
+<h2>Participantes (representación Nex Technology)</h2>
+<ul>
+  <li>Luis Alvarez</li>
+  <li>Daniel Mata</li>
+  <li>Alvaro Gutierrez</li>
+</ul>
+
+<hr/>
+
+<h2>Licencia</h2>
+<p>Por defecto sugerimos MIT. Si la empresa necesita otra, reemplazar.</p>
+
+<hr/>
+
+<h2>Contacto / Comunicación</h2>
+<p>Para coordinación diaria: WhatsApp del equipo. Para aspectos técnicos: abrir issue en este repo y linkear el tablero de Trello correspondiente.</p>
+
+<hr/>
+
+<footer>
+  <p><small>Última modificación: 01/12/2025 • Creado por Nex Technology</small></p>
+</footer>
+
+
