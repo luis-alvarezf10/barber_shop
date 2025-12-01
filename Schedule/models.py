@@ -1,5 +1,5 @@
 from django.db import models
-from Users.models import Users, Client
+from users.models import User, Client
 import uuid
 
 class Services(models.Model):
@@ -19,7 +19,7 @@ class BarberServices(models.Model):
 
     # Filtramos para asegurar que solo se relacionen con usuarios con rol 'barber'
     barber = models.ForeignKey(
-        Users, 
+        User, 
         on_delete=models.CASCADE, 
         limit_choices_to={'rol': 'barber'}, 
         verbose_name="Barbero"
@@ -29,7 +29,7 @@ class BarberServices(models.Model):
     class Meta:
         verbose_name = 'Habilidad del Barbero'
         verbose_name_plural = 'Habilidades de Barberos'
-        unique_together = ('barbero', 'servicio') # Un barbero solo puede tener un servicio registrado a la vez
+        unique_together = ('barber', 'service') # Un barbero solo puede tener un servicio registrado a la vez
         
     def __str__(self):
         return f"{self.barbero.username} puede hacer {self.servicio.nombre_servicio}"
@@ -50,7 +50,7 @@ class Appointment(models.Model):
     
     # El barbero asignado para esta cita
     barber = models.ForeignKey(
-        Users, 
+        User, 
         on_delete=models.SET_NULL, # Si el barbero se va, la cita no se borra
         null=True, 
         limit_choices_to={'rol': 'barber'}
@@ -63,7 +63,7 @@ class Appointment(models.Model):
     class Meta:
         verbose_name = 'Cita'
         verbose_name_plural = 'Citas'
-        ordering = ['fecha_hora']
+        ordering = ['time_hour']
         
     def __str__(self):
         return f"Cita de {self.cliente.nombre} con {self.barbero.username if self.barbero else 'No Asignado'} @ {self.fecha_hora.strftime('%Y-%m-%d %H:%M')}"

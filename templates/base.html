@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Barber Shop{% endblock %}</title>
+    
+    <!-- NO TOQUEN LAS IMPORTACIONES -->
+
+    <!-- Importacion de CSS Personalizado -->
+     <!-- Quité el static css de git ignore -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- cdn de Tailwind para estilos -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- cdn de fontsawesome para iconos, busca el de tu preferencia en la pagina mamañema -->
+    <script src="https://kit.fontawesome.com/4d6f0f576b.js" crossorigin="anonymous"></script>
+    
+    {% block extra_css %}{% endblock %}
+    
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen overflow-hidden">
+        <aside class="w-64 bg-white text-[#434343] flex-shrink-0 border-r border-[#D1D1D6]">
+            <div class="p-6 ">
+                <h1 class="text-2xl font-semibold">Nex Technology</h1>
+            </div>
+
+            <nav class="p-4 space-y-2">
+                <a href="{% url 'users:dashboard' %}" class="flex items-center gap-3 px-4 py-3">
+                    <i class="fa-regular fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                {% if user.is_admin %}
+                    <a href="#">Opciones de administrador mamañema</a>
+                {% endif %}
+
+                {% if user.is_receptionist %}
+                    <a href="#">Opciones de recepcionista mamañema</a>
+                {% endif %}
+
+                {% if user.is_barber %}
+                    <a href="#">Opciones de barber mamañema</a>
+                {% endif %}
+            </nav>
+
+            <div class="absolute bottom-0 w-64 p-4">
+                <a href="{% url 'users:logout' %}" class="flex items-center justify-center gap-2 w-full px-4 py-2 text-red-700">
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </aside>
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Barra de información -->
+            <header class="bg-white border-b border-[#D1D1D6] py-3 flex items-center justify-end px-6">
+                <div class="flex items-center gap-4">
+                    {% if user.profile_image %}
+                        <img src="{{ user.profile_image.url }}" alt="{{ user.username }}" class="w-10 h-10 rounded-full object-cover border-2 border-[#FF824A]">
+                    {% else %}
+                        <div class="w-10 h-10 bg-[#FF824A] rounded-full flex items-center justify-center text-white font-bold">
+                            {{ user.username|slice:":1"|upper }}
+                        </div>
+                    {% endif %}
+                    <div class="text-right">
+                        <p class="text-sm font-medium text-gray-800">{{ user.name }} {{ user.last_name }}</p>
+                        <p class="text-xs text-gray-500">{{ user.get_role_display }}</p>
+                    </div>
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Mensages -->
+                <!-- {% if messages %}
+                <div class="mb-6 space-y-2">
+                    {% for message in messages %}
+                    <div class="{% if message.tags == 'success' %}bg-green-100 border-green-400 text-green-700
+                                {% elif message.tags == 'error' %}bg-red-100 border-red-400 text-red-700
+                                {% elif message.tags == 'warning' %}bg-yellow-100 border-yellow-400 text-yellow-700
+                                {% else %}bg-blue-100 border-blue-400 text-blue-700{% endif %}
+                                border px-4 py-3 rounded">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %} -->
+
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

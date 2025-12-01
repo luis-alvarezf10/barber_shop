@@ -1,0 +1,10 @@
+@import url('fonts.googleapis.com');
+
+/* Importacion de fuente poppins mamañemas */
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: #f5f5f5;
+}
