@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "builds": [
+    {
+      "src": "application/wsgi.py", 
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.13" } 
+    },
+    {
+      "src": "build_files.sh",
+      "use": "@vercel/static-build",
+      "config": {
+        "maxLambdaSize": "15mb",
+        "runtime": "python3.9"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "application/wsgi.py" 
+    }
+  ],
+  "installCommand": "bash build_files.sh"
+}
