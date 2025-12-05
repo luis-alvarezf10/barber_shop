@@ -167,12 +167,14 @@ SESSION_COOKIE_SECURE = not DEBUG  # True en producción
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_AGE = 1209600  # 2 semanas
+SESSION_SAVE_EVERY_REQUEST = True  # Guardar sesión en cada request
 CSRF_COOKIE_SECURE = not DEBUG  # True en producción
 CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_HTTPONLY = False  # Permitir acceso desde JavaScript si es necesario
 
 # Configurar CSRF_TRUSTED_ORIGINS para Vercel
 if not DEBUG:
     CSRF_TRUSTED_ORIGINS = [
         'https://*.vercel.app',
-        'https://barber-shop-eta-lime.vercel.app',
+        'https://nex-barber-shop.vercel.app',
     ]
