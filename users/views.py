@@ -43,49 +43,62 @@ def dashboard_view(request):
 
 # Vista temporal para crear el primer superusuario en producción
 # ELIMINAR DESPUÉS DE CREAR EL ADMIN
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import os
 
 @csrf_exempt
 def create_first_admin(request):
-    # Solo permitir si no hay usuarios en la base de datos
     from .models import User
     
-    if User.objects.exists():
-        return JsonResponse({
-            'error': 'Ya existen usuarios en el sistema. Esta vista está deshabilitada.'
-        }, status=403)
-    
-    if request.method == 'POST':
-        # Obtener credenciales desde variables de entorno o request
-        username = request.POST.get('username') or os.environ.get('ADMIN_USERNAME', 'admin')
-        email = request.POST.get('email') or os.environ.get('ADMIN_EMAIL', 'admin@example.com')
-        password = request.POST.get('password') or os.environ.get('ADMIN_PASSWORD')
-        name = request.POST.get('name', 'Administrador')
+    try:
+        # Verificar si ya existen usuarios
+        user_count = User.objects.count()
         
-        if not password:
+        if user_count > 0:
             return JsonResponse({
-                'error': 'Se requiere una contraseña'
-            }, status=400)
+                'error': f'Ya existen {user_count} usuarios en el sistema. Esta vista está deshabilitada.'
+            }, status=403)
         
-        try:
-            user = User.objects.create_superuser(
-                username=username,
-                email=email,
-                password=password,
-                name=name,
-                role='admin'
-            )
-            return JsonResponse({
-                'success': True,
-                'message': f'Superusuario {username} creado exitosamente',
-                'username': username
-            })
-        except Exception as e:
-            return JsonResponse({
-                'error': str(e)
-            }, status=400)
-    
-    # Mostrar formulario simple
-    return render(request, 'users/create_admin.html')
+        if request.method == 'POST':
+            # Obtener credenciales desde el request
+            username = request.POST.get('username', '').strip()
+            email = request.POST.get('email', '').strip()
+            password = request.POST.get('password', '').strip()
+            name = request.POST.get('name', 'Administrador').strip()
+            
+            if not username or not password or not email:
+                return JsonResponse({
+                    'error': 'Se requieren username, email y password'
+                }, status=400)
+            
+            try:
+                # Crear el superusuario
+                user = User.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=password,
+                    name=name,
+                    last_name='',
+                    phone_number='',
+                    role='admin',
+                    is_staff=True,
+                    is_superuser=True
+                )
+                
+                return JsonResponse({
+                    'success': True,
+                    'message': f'Superusuario {username} creado exitosamente',
+                    'username': username,
+                    'login_url': '/auth/login/'
+                })
+            except Exception as e:
+                return JsonResponse({
+                    'error': f'Error al crear usuario: {str(e)}'
+                }, status=400)
+        
+        # Mostrar formulario simple
+        return render(request, 'users/create_admin.html')
+        
+    except Exception as e:
+        return HttpResponse(f'Error del servidor: {str(e)}', status=500)
