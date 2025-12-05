@@ -30,13 +30,17 @@ def logout_view(request):
 
 @login_required(login_url='users:login')
 def dashboard_view(request):
-    user = request.user
-    context = {
-        'user': user,
-        'role': user.get_role_display(),
-        'is_admin': user.is_admin,
-        'is_barber': user.is_barber,
-        'is_receptionist': user.is_receptionist,
-    }
-    return render(request, 'users/dashboard.html', context)
+    try:
+        user = request.user
+        context = {
+            'user': user,
+            'role': user.get_role_display(),
+            'is_admin': user.is_admin,
+            'is_barber': user.is_barber,
+            'is_receptionist': user.is_receptionist,
+        }
+        return render(request, 'users/dashboard.html', context)
+    except Exception as e:
+        messages.error(request, f'Error al cargar dashboard: {str(e)}')
+        return redirect('users:login')
 

@@ -15,14 +15,11 @@ if isinstance(BASE_DIR, str):
 # SECURITY WARNING: keep the secret key used in production secret!
 DEBUG = os.environ.get('DEBUG') == 'True' 
 
-# 2. SECRET_KEY debe venir del entorno. Si no está, el deploy falla.
 SECRET_KEY = os.environ.get('SECRET_KEY') 
 if not SECRET_KEY:
-    # Esto garantiza que el deploy se detiene si no configuras la clave en Vercel.
     raise Exception("ERROR DE SEGURIDAD: SECRET_KEY no está configurada en Vercel.")
 
-# 3. ALLOWED_HOSTS (debe incluir el dominio de Vercel)
-# Leemos la lista de hosts desde Vercel
+
 allowed_hosts_string = os.environ.get('ALLOWED_HOSTS', '.vercel.app')
 ALLOWED_HOSTS = allowed_hosts_string.split(',')
 # Application definition
