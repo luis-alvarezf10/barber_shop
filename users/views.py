@@ -5,7 +5,8 @@ from django.contrib import messages
 from .decorators import admin_required, receptionist_or_admin, barber_only
 
 def login_view(request):
-    if request.user.is_authenticated:
+    # Solo redirigir si está autenticado Y es un GET request
+    if request.method == 'GET' and request.user.is_authenticated:
         return redirect('users:dashboard')
     
     if request.method == 'POST':
@@ -17,7 +18,9 @@ def login_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, f'Bienvenido {user.name}!')
-            return redirect('users:dashboard')
+            # Usar next parameter si existe, sino dashboard
+            next_url = request.GET.get('next', 'users:dashboard')
+            return redirect(next_url)
         else:
             messages.error(request, 'Usuario o contraseña incorrectos')
     

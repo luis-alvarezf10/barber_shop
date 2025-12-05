@@ -166,6 +166,13 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_SECURE = not DEBUG  # True en producción
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_AGE = 1209600  # 2 semanas
 CSRF_COOKIE_SECURE = not DEBUG  # True en producción
 CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_TRUSTED_ORIGINS = [f'https://{host}' for host in ALLOWED_HOSTS if host != 'localhost']
+
+# Configurar CSRF_TRUSTED_ORIGINS para Vercel
+if not DEBUG:
+    CSRF_TRUSTED_ORIGINS = [
+        'https://*.vercel.app',
+        'https://barber-shop-eta-lime.vercel.app',
+    ]
