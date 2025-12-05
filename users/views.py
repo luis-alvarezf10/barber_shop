@@ -45,16 +45,39 @@ def dashboard_view(request):
 # ELIMINAR DESPUÉS DE CREAR EL ADMIN
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.management import call_command
 import os
 
 @csrf_exempt
 def create_first_admin(request):
     from .models import User
+    from django.db import connection
+    from django.db.utils import OperationalError, ProgrammingError
     
     try:
-        # Verificar si ya existen usuarios
-        user_count = User.objects.count()
+        # Intentar verificar si las tablas existen
+        try:
+            user_count = User.objects.count()
+        except (OperationalError, ProgrammingError) as e:
+            # Las tablas no existen, ejecutar migraciones
+            if 'does not exist' in str(e) or 'no such table' in str(e):
+                try:
+                    call_command('migrate', '--noinput')
+                    return HttpResponse('''
+                        <html>
+                        <body style="font-family: Arial; padding: 50px; text-align: center;">
+                            <h1>✅ Migraciones ejecutadas exitosamente</h1>
+                            <p>Las tablas de la base de datos han sido creadas.</p>
+                            <p><a href="/auth/setup-admin/" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Crear Administrador</a></p>
+                        </body>
+                        </html>
+                    ''')
+                except Exception as migrate_error:
+                    return HttpResponse(f'Error ejecutando migraciones: {str(migrate_error)}', status=500)
+            else:
+                raise
         
+        # Si llegamos aquí, las tablas existen
         if user_count > 0:
             return JsonResponse({
                 'error': f'Ya existen {user_count} usuarios en el sistema. Esta vista está deshabilitada.'
