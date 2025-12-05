@@ -9,14 +9,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3-_wac8wthhbhgtz6t2je(u8)md6pa5_pt94s6ha+#j(7mi%g6'
+DEBUG = os.environ.get('DEBUG') == 'True' 
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# 2. SECRET_KEY debe venir del entorno. Si no está, el deploy falla.
+SECRET_KEY = os.environ.get('SECRET_KEY') 
+if not SECRET_KEY:
+    # Esto garantiza que el deploy se detiene si no configuras la clave en Vercel.
+    raise Exception("ERROR DE SEGURIDAD: SECRET_KEY no está configurada en Vercel.")
 
-ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1']
-
-
+# 3. ALLOWED_HOSTS (debe incluir el dominio de Vercel)
+# Leemos la lista de hosts desde Vercel
+allowed_hosts_string = os.environ.get('ALLOWED_HOSTS', '.vercel.app')
+ALLOWED_HOSTS = allowed_hosts_string.split(',')
 # Application definition
 
 INSTALLED_APPS = [
