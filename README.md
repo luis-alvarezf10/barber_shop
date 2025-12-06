@@ -35,7 +35,7 @@
   <li><strong>Frontend:</strong> HTML, CSS y Tailwind CSS</li>
   <li><strong>Íconos:</strong> FontAwesome</li>
   <li><strong>Fuente:</strong> Poppins (importada desde Google Fonts)</li>
-  <li><strong>Base de datos:</strong> SQLite3 (configuración por defecto para desarrollo)</li>
+  <li><strong>Base de datos:</strong> Neon </li>
 </ul>
 
 <hr/>
