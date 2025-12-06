@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Empleados - Barber Shop{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-800">Empleados</h1>
+        <p class="text-gray-600 mt-2">Total de empleados: {{ total_employees }}</p>
+    </div>
+    
+    <div class="flex items-center gap-4">
+        <!-- Botón Agregar Empleado -->
+        <a href="{% url 'users:add_employee' %}" 
+            class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-lg transition flex items-center gap-2">
+            <i class="fa-solid fa-user-plus"></i>
+            Agregar Empleado
+        </a>
+        
+        <!-- Dropdown de filtro -->
+        <div class="relative">
+            <select id="roleFilter" onchange="filterEmployees()" class="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent cursor-pointer">
+                <option value="all" {% if role_filter == 'all' %}selected{% endif %}>Todos los empleados</option>
+                <option value="admin" {% if role_filter == 'admin' %}selected{% endif %}>Administradores ({{ total_admins }})</option>
+                <option value="barber" {% if role_filter == 'barber' %}selected{% endif %}>Barberos ({{ total_barbers }})</option>
+                <option value="receptionist" {% if role_filter == 'receptionist' %}selected{% endif %}>Recepcionistas ({{ total_receptionists }})</option>
+            </select>
+            <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Estadísticas rápidas -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+
+    
+    <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-purple-600 text-sm">Administradores</p>
+                <p class="text-2xl font-bold text-purple-800">{{ total_admins }}</p>
+            </div>
+            <i class="fa-solid fa-user-tie text-3xl text-purple-400"></i>
+        </div>
+    </div>
+    
+    <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-orange-600 text-sm">Barberos</p>
+                <p class="text-2xl font-bold text-orange-800">{{ total_barbers }}</p>
+            </div>
+            <i class="fa-solid fa-scissors text-3xl text-orange-400"></i>
+        </div>
+    </div>
+    
+    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-blue-600 text-sm">Recepcionistas</p>
+                <p class="text-2xl font-bold text-blue-800">{{ total_receptionists }}</p>
+            </div>
+            <i class="fa-solid fa-headset text-3xl text-blue-400"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Lista unificada de empleados -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for employee in employees %}
+    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border-t-4 
+        {% if employee.role == 'admin' %}border-purple-500
+        {% elif employee.role == 'barber' %}border-orange-500
+        {% else %}border-blue-500{% endif %}">
+        
+        <div class="flex items-center gap-4 mb-4">
+            {% if employee.profile_image %}
+                <img src="{{ employee.profile_image.url }}" alt="{{ employee.name }}" class="w-16 h-16 rounded-full object-cover border-2 
+                    {% if employee.role == 'admin' %}border-purple-500
+                    {% elif employee.role == 'barber' %}border-orange-500
+                    {% else %}border-blue-500{% endif %}">
+            {% else %}
+                <div class="w-16 h-16 bg-gradient-to-br rounded-full flex items-center justify-center text-white font-bold text-2xl
+                    {% if employee.role == 'admin' %}from-purple-500 to-purple-700
+                    {% elif employee.role == 'barber' %}from-orange-500 to-orange-700
+                    {% else %}from-blue-500 to-blue-700{% endif %}">
+                    {{ employee.name|slice:":1"|upper }}
+                </div>
+            {% endif %}
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800">{{ employee.name }} {{ employee.last_name }}</h3>
+                <p class="text-sm font-medium
+                    {% if employee.role == 'admin' %}text-purple-600
+                    {% elif employee.role == 'barber' %}text-orange-600
+                    {% else %}text-blue-600{% endif %}">
+                    {{ employee.get_role_display }}
+                </p>
+            </div>
+        </div>
+        
+        <div class="space-y-2 text-sm text-gray-600">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-user w-4"></i>
+                <span>{{ employee.username }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-envelope w-4"></i>
+                <span>{{ employee.email }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-phone w-4"></i>
+                <span>{{ employee.phone_number }}</span>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-3 text-center py-12">
+        <i class="fa-solid fa-users text-6xl text-gray-300 mb-4"></i>
+        <p class="text-gray-500 text-lg">No hay empleados registrados</p>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+function filterEmployees() {
+    const select = document.getElementById('roleFilter');
+    const role = select.value;
+    window.location.href = `?role=${role}`;
+}
+</script>
+
+{% endblock %}

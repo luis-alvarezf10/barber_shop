@@ -29,21 +29,31 @@
             </div>
 
             <nav class="p-4 space-y-2">
-                <a href="{% url 'users:dashboard' %}" class="flex items-center gap-3 px-4 py-3">
-                    <i class="fa-regular fa-house"></i>
+                <a href="{% url 'users:dashboard' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {% if request.resolver_match.url_name == 'dashboard' %}bg-[#FF824A] text-white{% else %}hover:bg-gray-100{% endif %}">
+                    <i class="fa-solid fa-house"></i>
                     <span>Dashboard</span>
                 </a>
 
+                
                 {% if user.is_admin %}
-                    <a href="#">Opciones de administrador mamañema</a>
+                    <a href="{% url 'users:employees' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {% if request.resolver_match.url_name == 'employees' or request.resolver_match.url_name == 'add_employee' %}bg-[#FF824A] text-white{% else %}hover:bg-gray-100{% endif %}">
+                        <i class="fa-solid fa-users"></i>
+                        <span>Empleados</span>
+                    </a>
                 {% endif %}
 
                 {% if user.is_receptionist %}
-                    <a href="#">Opciones de recepcionista mamañema</a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {% if request.resolver_match.url_name == 'appointments' %}bg-[#FF824A] text-white{% else %}hover:bg-gray-100{% endif %}">
+                        <i class="fa-solid fa-calendar"></i>
+                        <span>Citas</span>
+                    </a>
                 {% endif %}
 
                 {% if user.is_barber %}
-                    <a href="#">Opciones de barber mamañema</a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {% if request.resolver_match.url_name == 'services' %}bg-[#FF824A] text-white{% else %}hover:bg-gray-100{% endif %}">
+                        <i class="fa-solid fa-scissors"></i>
+                        <span>Mis Servicios</span>
+                    </a>
                 {% endif %}
             </nav>
 

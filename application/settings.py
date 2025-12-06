@@ -1,48 +1,54 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Luis: Configuración de rutas base del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Asegurar que BASE_DIR sea siempre un objeto Path
+# Luis: Cargar variables de entorno desde archivo .env para desarrollo local
+load_dotenv(BASE_DIR / '.env')
+
+# Luis: Asegurar que BASE_DIR sea siempre un objeto Path
 if isinstance(BASE_DIR, str):
     BASE_DIR = Path(BASE_DIR)
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+# Luis: Configuración de seguridad y debug
+# DEBUG debe ser False en producción, True en desarrollo
+DEBUG = os.environ.get('DEBUG', 'True') == 'True' 
 
-# SECURITY WARNING: keep the secret key used in production secret!
-DEBUG = os.environ.get('DEBUG') == 'True' 
+# Luis: SECRET_KEY es obligatoria en producción, tiene valor por defecto en desarrollo
+SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production-12345') 
+if not DEBUG and SECRET_KEY == 'dev-secret-key-change-in-production-12345':
+    raise Exception("ERROR DE SEGURIDAD: SECRET_KEY no está configurada en producción.")
 
-SECRET_KEY = os.environ.get('SECRET_KEY') 
-if not SECRET_KEY:
-    raise Exception("ERROR DE SEGURIDAD: SECRET_KEY no está configurada en Vercel.")
-
-
-allowed_hosts_string = os.environ.get('ALLOWED_HOSTS', '.vercel.app')
+# Luis: ALLOWED_HOSTS define qué dominios pueden acceder a la aplicación
+allowed_hosts_string = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,.vercel.app')
 ALLOWED_HOSTS = allowed_hosts_string.split(',')
-# Application definition
+
+# Luis: Aplicaciones instaladas en el proyecto
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth', #authentication
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #apps
+    # Luis: Apps personalizadas del proyecto
     'schedule',
     'finance',
     'users',
 ]
 
+# Luis: Modelo de usuario personalizado en lugar del User por defecto de Django
 AUTH_USER_MODEL = 'users.User'
 
+# Luis: Middleware - orden importa, WhiteNoise debe ir después de SecurityMiddleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Luis: Para servir archivos estáticos en producción
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -51,13 +57,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Luis: Archivo principal de URLs
 ROOT_URLCONF = 'application.urls'
 
+# Luis: Configuración de templates (plantillas HTML)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
+        'DIRS': [BASE_DIR / 'templates'],  # Luis: Carpeta global de templates
+        'APP_DIRS': True,  # Luis: Buscar templates dentro de cada app
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -69,27 +77,27 @@ TEMPLATES = [
     },
 ]
 
+# Luis: Aplicación WSGI para deployment
 WSGI_APPLICATION = 'application.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-# Usar PostgreSQL en producción, SQLite en desarrollo
+# Luis: Configuración de base de datos
+# Si existe DATABASE_URL o POSTGRES_URL, usa PostgreSQL (Neon)
+# Si no, usa SQLite para desarrollo local
 DATABASE_URL = os.environ.get('DATABASE_URL') or os.environ.get('POSTGRES_URL')
 
 if DATABASE_URL:
-    # Producción: usar PostgreSQL desde variable de entorno
+    # Luis: Producción/Testing - PostgreSQL (Neon)
     import dj_database_url
     DATABASES = {
         'default': dj_database_url.config(
             default=DATABASE_URL,
-            conn_max_age=600,
-            conn_health_checks=True,
+            conn_max_age=600,  # Luis: Mantener conexión abierta por 10 minutos
+            conn_health_checks=True,  # Luis: Verificar salud de la conexión
         )
     }
 else:
-    # Desarrollo: usar SQLite
+    # Luis: Desarrollo local - SQLite (si no hay DATABASE_URL en .env)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -98,9 +106,7 @@ else:
     }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
+# Luis: Validadores de contraseñas para seguridad
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -117,11 +123,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
+# Luis: Configuración de internacionalización
 LANGUAGE_CODE = 'en-us'
 
+# Luis: Zona horaria de Venezuela
 TIME_ZONE = 'America/Caracas'
 
 USE_I18N = True
@@ -129,50 +134,47 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
+# Luis: Configuración de archivos estáticos (CSS, JS, imágenes)
 STATIC_URL = '/static/'
 
-# Carpeta donde Django buscará archivos estáticos durante desarrollo
+# Luis: Carpeta donde Django buscará archivos estáticos durante desarrollo
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-# Carpeta donde se recopilarán todos los archivos estáticos en producción (python manage.py collectstatic)
+# Luis: Carpeta donde se recopilarán todos los archivos estáticos en producción
+# Se ejecuta con: python manage.py collectstatic
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Media files (archivos subidos por usuarios)
+# Luis: Archivos subidos por usuarios (fotos de perfil, etc.)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Configuración para Vercel - servir archivos estáticos con WhiteNoise
+# Luis: Configuración de almacenamiento para Vercel con WhiteNoise
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",  # Luis: Comprime archivos estáticos
     },
 }
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
+# Luis: Tipo de clave primaria por defecto para modelos
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Configuración de sesiones para Vercel
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-SESSION_COOKIE_SECURE = not DEBUG  # True en producción
-SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_AGE = 1209600  # 2 semanas
-SESSION_SAVE_EVERY_REQUEST = True  # Guardar sesión en cada request
-CSRF_COOKIE_SECURE = not DEBUG  # True en producción
+# Luis: Configuración de sesiones para mantener usuarios logueados
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Luis: Guardar sesiones en base de datos
+SESSION_COOKIE_SECURE = not DEBUG  # Luis: True en producción (HTTPS), False en desarrollo
+SESSION_COOKIE_HTTPONLY = True  # Luis: No accesible desde JavaScript
+SESSION_COOKIE_SAMESITE = 'Lax'  # Luis: Protección contra CSRF
+SESSION_COOKIE_AGE = 1209600  # Luis: 2 semanas de duración
+SESSION_SAVE_EVERY_REQUEST = True  # Luis: Guardar sesión en cada request para evitar loops
+CSRF_COOKIE_SECURE = not DEBUG  # Luis: True en producción (HTTPS), False en desarrollo
 CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_HTTPONLY = False  # Permitir acceso desde JavaScript si es necesario
+CSRF_COOKIE_HTTPONLY = False
 
-# Configurar CSRF_TRUSTED_ORIGINS para Vercel
+# Luis: Dominios confiables para CSRF en producción (Vercel)
 if not DEBUG:
     CSRF_TRUSTED_ORIGINS = [
         'https://*.vercel.app',
