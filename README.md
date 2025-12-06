@@ -73,6 +73,20 @@ source .venv/bin/activate
     <small>Si no existe <code>requirements.txt</code>, instalar al menos Django: <code>pip install django </code></small>
   </li>
 
+  <li><strong>Configurar variables de entorno</strong>
+    <p>Copia el archivo de ejemplo y configura tus variables:</p>
+    <pre><code>cp .env.example .env</code></pre>
+    <p>Edita el archivo <code>.env</code> con tus valores:</p>
+    <pre><code>DEBUG=True
+SECRET_KEY=tu-clave-secreta-aqui
+ALLOWED_HOSTS=localhost,127.0.0.1
+DATABASE_URL=postgresql://usuario:password@host/database?sslmode=require</code></pre>
+    <p><strong>Generar una SECRET_KEY segura:</strong></p>
+    <pre><code>python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"</code></pre>
+    <p>Copia la clave generada y pégala en tu archivo <code>.env</code></p>
+    <p><em>Nota: El archivo <code>.env</code> NO debe subirse a Git (ya está en .gitignore)</em></p>
+  </li>
+
   <li><strong>Migraciones y base de datos</strong>
     <pre><code>python manage.py migrate
 python manage.py createsuperuser  # crear admin para pruebas</code></pre>
@@ -83,6 +97,56 @@ python manage.py createsuperuser  # crear admin para pruebas</code></pre>
     <p>Abrir <code>http://127.0.0.1:8000</code> en el navegador.</p>
   </li>
 </ol>
+
+<hr/>
+
+<h2>Deployment en Vercel</h2>
+
+<h3>Configuración de Variables de Entorno</h3>
+<p>Para desplegar en Vercel, debes configurar las variables de entorno en el dashboard:</p>
+
+<ol>
+  <li>Ve a tu proyecto en <a href="https://vercel.com/dashboard">Vercel Dashboard</a></li>
+  <li>Selecciona <strong>Settings → Environment Variables</strong></li>
+  <li>Agrega las siguientes variables:</li>
+</ol>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Valor</th>
+      <th>Descripción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>DEBUG</code></td>
+      <td><code>False</code></td>
+      <td>Desactivar modo debug en producción</td>
+    </tr>
+    <tr>
+      <td><code>SECRET_KEY</code></td>
+      <td><em>Generar nueva clave</em></td>
+      <td>Clave secreta de Django (usar comando abajo)</td>
+    </tr>
+    <tr>
+      <td><code>ALLOWED_HOSTS</code></td>
+      <td><code>.vercel.app</code></td>
+      <td>Dominios permitidos</td>
+    </tr>
+    <tr>
+      <td><code>DATABASE_URL</code></td>
+      <td><em>Tu URL de PostgreSQL</em></td>
+      <td>Conexión a base de datos (Neon, Railway, etc.)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Generar SECRET_KEY para producción:</strong></p>
+<pre><code>python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"</code></pre>
+
+<p><em>⚠️ Importante: Usa una SECRET_KEY diferente para producción, nunca uses la misma de desarrollo.</em></p>
 
 <hr/>
 
