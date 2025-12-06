@@ -35,7 +35,7 @@
   <li><strong>Frontend:</strong> HTML, CSS y Tailwind CSS</li>
   <li><strong>Íconos:</strong> FontAwesome</li>
   <li><strong>Fuente:</strong> Poppins (importada desde Google Fonts)</li>
-  <li><strong>Base de datos:</strong> SQLite3 (configuración por defecto para desarrollo)</li>
+  <li><strong>Base de datos:</strong> Neon </li>
 </ul>
 
 <hr/>
@@ -97,56 +97,6 @@ python manage.py createsuperuser  # crear admin para pruebas</code></pre>
     <p>Abrir <code>http://127.0.0.1:8000</code> en el navegador.</p>
   </li>
 </ol>
-
-<hr/>
-
-<h2>Deployment en Vercel</h2>
-
-<h3>Configuración de Variables de Entorno</h3>
-<p>Para desplegar en Vercel, debes configurar las variables de entorno en el dashboard:</p>
-
-<ol>
-  <li>Ve a tu proyecto en <a href="https://vercel.com/dashboard">Vercel Dashboard</a></li>
-  <li>Selecciona <strong>Settings → Environment Variables</strong></li>
-  <li>Agrega las siguientes variables:</li>
-</ol>
-
-<table>
-  <thead>
-    <tr>
-      <th>Variable</th>
-      <th>Valor</th>
-      <th>Descripción</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>DEBUG</code></td>
-      <td><code>False</code></td>
-      <td>Desactivar modo debug en producción</td>
-    </tr>
-    <tr>
-      <td><code>SECRET_KEY</code></td>
-      <td><em>Generar nueva clave</em></td>
-      <td>Clave secreta de Django (usar comando abajo)</td>
-    </tr>
-    <tr>
-      <td><code>ALLOWED_HOSTS</code></td>
-      <td><code>.vercel.app</code></td>
-      <td>Dominios permitidos</td>
-    </tr>
-    <tr>
-      <td><code>DATABASE_URL</code></td>
-      <td><em>Tu URL de PostgreSQL</em></td>
-      <td>Conexión a base de datos (Neon, Railway, etc.)</td>
-    </tr>
-  </tbody>
-</table>
-
-<p><strong>Generar SECRET_KEY para producción:</strong></p>
-<pre><code>python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"</code></pre>
-
-<p><em>⚠️ Importante: Usa una SECRET_KEY diferente para producción, nunca uses la misma de desarrollo.</em></p>
 
 <hr/>
 
